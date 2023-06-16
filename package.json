@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bootstrap-icons": "^1.10.5",
     "global": "^4.4.0",
     "vercel": "^30.2.2"
   }
