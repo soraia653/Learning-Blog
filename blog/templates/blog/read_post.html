@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+
+{% block body %}
+<div class="container">
+    <h1 class="display-4 text-center mt-4 mb-5">{{ post.title }}</h1>
+    
+    <div class="text-center mb-4">
+        <img src="https://techcrunch.com/wp-content/uploads/2023/06/reddit-logo-broken.jpg?w=730&crop=1" class="post-image center" alt="Post Image">
+    </div>
+    <div class="post-details">
+        <p class="post-author"><strong>Author:</strong> {{ post.author }}</p>
+        <p class="post-date"><strong>Published Date:</strong> {{ post.published_date }}</p>
+        <div class="post-body" style="font-weight: 400; letter-spacing: 0.05em; line-height: 1.8; text-align: justify !important;">
+            {{ post.body | linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}

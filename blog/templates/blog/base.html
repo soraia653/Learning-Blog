@@ -14,7 +14,7 @@
     <body>
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Learning Blog</a>
+                <a class="navbar-brand" href="{% url 'main_page' %}">Learning Blog</a>
                 <!-- mobile menu button start -->
                 <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -70,9 +70,9 @@
                 </div>
             </div>
         </nav>
-    {% if message %}
-    {{message}}
-    {% endif %}
-    
+        <div class="main-area">
+            {% block body %}
+            {% endblock %}
+        </div>
     </body>
 </html>

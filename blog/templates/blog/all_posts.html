@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+
+{% block body %}
+<div class="container">
+    <h1 class="display-4 text-center my-4">Learning Blog</h1>
+    
+    <div class="card mb-3">
+      {% for post in posts %}
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="https://techcrunch.com/wp-content/uploads/2023/06/reddit-logo-broken.jpg?w=730&crop=1" class="img-fluid rounded-start" alt="...">
+          </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.summary }}</p>
+                    <p class="card-text"><small class="text-muted">{{post.published_date}}</small></p>
+                    <a href="{% url 'read_post' post.id %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+  
+{% endblock %}
