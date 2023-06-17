@@ -1,6 +1,6 @@
 {% extends "blog/base.html" %}
 
-{% comment %} {% block body %}
+{% block body %}
 <div class="container">
     <h1 class="display-4 text-center my-4">Learning Blog</h1>
     
@@ -8,7 +8,7 @@
       {% for post in posts %}
         <div class="row g-0">
           <div class="col-md-4">
-            <img src="https://techcrunch.com/wp-content/uploads/2023/06/reddit-logo-broken.jpg?w=730&crop=1" class="img-fluid rounded-start" alt="...">
+            {% comment %} <img src="https://techcrunch.com/wp-content/uploads/2023/06/reddit-logo-broken.jpg?w=730&crop=1" class="img-fluid rounded-start" alt="..."> {% endcomment %}
           </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -25,4 +25,4 @@
   </div>
   
   
-{% endblock %} {% endcomment %}
+{% endblock %}
