@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+
+{% block body %}
+<div class="container">
+    <h1 class="display-4 text-center my-4">Create New Account</h1>
+    <div class="alert alert-danger {% if messages %}d-block{% else %}d-none{% endif %}">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    <form method="post" action="{% url 'registration' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" name="username" id="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirmation" class="form-label">Confirm Password</label>
+            <input type="password" name="confirmation" id="confirmation" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+{% endblock %}
