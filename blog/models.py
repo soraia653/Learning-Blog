@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 class Post(models.Model):
     title = models.CharField(max_length=125, unique=True)
     slug_title = models.SlugField(max_length=255, unique=True)
-    summary = models.TextField(max_length=100, default="No summary was provided.")
+    summary = models.TextField(max_length=100)
     body = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
