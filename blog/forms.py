@@ -12,7 +12,7 @@ class PostForm(forms.ModelForm):
                     'placeholder': 'Insert the title of your post.', 
                     'class': 'form-control'
                     }
-                ),
+            ),
             'summary': forms.Textarea(
                 attrs={
                     'placeholder': 'Insert a quick description about your post.',
@@ -24,5 +24,6 @@ class PostForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'Be creative!',
                     'class': 'form-control'
-                })
+                }
+            ),
         }

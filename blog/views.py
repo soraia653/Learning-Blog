@@ -36,6 +36,7 @@ def new_post(request):
                 new_post = form.save(commit=False)
                 new_post.author = User.objects.get(username=request.user)
                 new_post.save()
+                #form.save_m2m()
                 return redirect("main_page")
         else:
             form = PostForm()
