@@ -5,7 +5,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'summary', 'body']
+        fields = ['title', 'summary', 'body', 'tags']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -25,5 +25,11 @@ class PostForm(forms.ModelForm):
                     'placeholder': 'Be creative!',
                     'class': 'form-control'
                 }
+            ),
+            'tags': forms.TextInput(
+                attrs={
+                    'placeholder': 'Tag your post for easier search.', 
+                    'class': 'form-control'
+                    }
             ),
         }

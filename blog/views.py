@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.validators import validate_email
@@ -28,24 +28,42 @@ def read_post(request, post_id):
     return render(request, "blog/read_post.html", context_dict)
 
 def new_post(request):
-        
-        if request.method == "POST":
-            form = PostForm(request.POST)
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            new_post.author = User.objects.get(username=request.user)
+            new_post.save()
+            form.save_m2m()
+            return redirect("main_page")
+    else:
+        form = PostForm()
 
-            if form.is_valid():
-                new_post = form.save(commit=False)
-                new_post.author = User.objects.get(username=request.user)
-                new_post.save()
-                #form.save_m2m()
-                return redirect("main_page")
-        else:
-            form = PostForm()
+    context_dict = {
+        "form": form,
+    }
 
-        context_dict = {
-            "form": form,
-        }
+    return render(request, "blog/new_post.html", context_dict)
 
-        return render(request, "blog/new_post.html", context_dict)
+def edit_post(request, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+
+        if form.is_valid():
+            form.save()
+            return redirect("main_page")
+    else:
+        form = PostForm(instance=post)
+    
+    context_dict = {
+        "form": form,
+        "post": post,
+    }
+
+    return render(request, "blog/edit_post.html", context_dict)
 
 def login_view(request):
 

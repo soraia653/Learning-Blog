@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(f".env.{os.environ.get('ENV_VARIABLE')}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'blog',
     'bootstrap5',
-    'treebeard',
+    'taggit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
