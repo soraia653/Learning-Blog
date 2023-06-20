@@ -65,6 +65,23 @@ def edit_post(request, post_id):
 
     return render(request, "blog/edit_post.html", context_dict)
 
+def delete_post(request, post_id):
+    
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        post.delete()
+        return redirect("main_page")
+    
+    context_dict = {
+        "post": post,
+    }
+    
+    return render(request, "blog/delete_post.html", context_dict)
+
+
+    return render(request)
+
 def login_view(request):
 
     if request.method == "POST":

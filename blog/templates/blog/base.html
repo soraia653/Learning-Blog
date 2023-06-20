@@ -10,11 +10,17 @@
         {% load bootstrap5 %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+
+        <!-- Load FontAwesome icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'main_page' %}">Learning Blog</a>
+                <a class="navbar-brand" href="{% url 'main_page' %}">
+                    Learning Blog
+                </a>
                 <!-- mobile menu button start -->
                 <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -24,6 +30,11 @@
                 <!-- mobile menu button end -->
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a id="openSide" class="nav-link" role="button" data-bs-toggle="offcanvas" href="#offcanvasWithBothOptions" aria-controls="offcanvasExample">
+                                Side Bar
+                            </a>
+                        </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a id="newPost" class="nav-link" href="{% url 'new_post' %}">
@@ -70,5 +81,17 @@
             {% block body %}
             {% endblock %}
         </div>
+
+        <!-- Side bar -->
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Search Tags</h5>
+
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <p>Here you can find all created tags split by month and year.</p>
+            </div>
+          </div>
     </body>
 </html>

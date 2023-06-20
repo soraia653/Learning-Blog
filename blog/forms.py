@@ -5,7 +5,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'summary', 'body', 'tags']
+        fields = ['title', 'summary', 'image_url', 'body', 'tags']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -18,6 +18,12 @@ class PostForm(forms.ModelForm):
                     'placeholder': 'Insert a quick description about your post.',
                     'class': 'form-control',
                     'rows': '3'
+                }
+            ),
+            'image_url': forms.URLInput(
+                attrs={
+                    'placeholder': 'Enter image URL.',
+                    'class': 'form-control',
                 }
             ),
             'body': forms.Textarea(
