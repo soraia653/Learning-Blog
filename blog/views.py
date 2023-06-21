@@ -12,8 +12,24 @@ from .forms import PostForm
 def index(request):
     all_posts = Post.objects.all()
 
+    all_tags = Post.tags.all().order_by('name')
+
+    # create dictionary for tags from A-Z
+    tags_dict = {}
+
+    for tag in all_tags:
+        first_letter = tag.name[0].upper()
+        if first_letter not in tags_dict:
+            tags_dict[first_letter] = {'tags': [], 'count': 0}
+        tags_dict[first_letter]['tags'].append(tag)
+        tags_dict[first_letter]['count'] += 1
+    
+    sorted_keys = sorted(tags_dict.keys())
+
     context_dict = {
         "posts": all_posts,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
     }
 
     return render(request, "blog/all_posts.html", context_dict)
@@ -21,8 +37,24 @@ def index(request):
 def read_post(request, post_id):
     select_post = Post.objects.get(id=post_id)
 
+    all_tags = Post.tags.all().order_by('name')
+
+    # create dictionary for tags from A-Z
+    tags_dict = {}
+
+    for tag in all_tags:
+        first_letter = tag.name[0].upper()
+        if first_letter not in tags_dict:
+            tags_dict[first_letter] = {'tags': [], 'count': 0}
+        tags_dict[first_letter]['tags'].append(tag)
+        tags_dict[first_letter]['count'] += 1
+    
+    sorted_keys = sorted(tags_dict.keys())
+
     context_dict = {
-        "post": select_post
+        "post": select_post,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
     }
 
     return render(request, "blog/read_post.html", context_dict)
@@ -81,6 +113,35 @@ def delete_post(request, post_id):
 
 
     return render(request)
+
+def get_posts_per_tag(request, tag_id):
+
+    filtered_posts = []
+    
+    if request.method == "POST":
+        filtered_posts = Post.objects.filter(tags__id=tag_id)
+    
+    all_tags = Post.tags.all().order_by('name')
+
+    # create dictionary for tags from A-Z
+    tags_dict = {}
+
+    for tag in all_tags:
+        first_letter = tag.name[0].upper()
+        if first_letter not in tags_dict:
+            tags_dict[first_letter] = {'tags': [], 'count': 0}
+        tags_dict[first_letter]['tags'].append(tag)
+        tags_dict[first_letter]['count'] += 1
+    
+    sorted_keys = sorted(tags_dict.keys())
+
+    context_dict = {
+        "filtered_posts": filtered_posts,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
+    }
+
+    return render(request, "blog/posts_per_tag.html", context_dict)
 
 def login_view(request):
 

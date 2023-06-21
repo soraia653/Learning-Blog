@@ -32,7 +32,7 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a id="openSide" class="nav-link" role="button" data-bs-toggle="offcanvas" href="#offcanvasWithBothOptions" aria-controls="offcanvasExample">
-                                Side Bar
+                                Tags
                             </a>
                         </li>
                         {% if user.is_authenticated %}
@@ -83,14 +83,15 @@
         </div>
 
         <!-- Side bar -->
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="width:300px;">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Search Tags</h5>
-
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <p>Here you can find all created tags split by month and year.</p>
+                <p>Here you can find all created tags ordered alphabetically.</p>
+                {% block tags %}
+                {% endblock %}
             </div>
           </div>
     </body>

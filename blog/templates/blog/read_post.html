@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load custom_filters %}
 
 {% block body %}
 <div class="container">
@@ -20,4 +21,23 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block tags %}
+<div class="list-group">  
+  {% for letter in sorted_keys %}
+    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" disabled>
+      <strong>{{ letter }}</strong>
+      <span class="badge bg-primary rounded-pill"> {{tags_dict|get_count:letter }} </span>
+      {% for tag in tags_dict|get_tags:letter %}
+      <form method="POST" action="{% url 'posts_per_tag' tag.id %}">
+        {% csrf_token %}
+        <button type="submit" class="list-group-item list-group-item-action">
+          {{ tag.name }}
+        </button>
+      </form>
+      {% endfor %}
+      </button>
+  {% endfor %}
+  </div>
 {% endblock %}
