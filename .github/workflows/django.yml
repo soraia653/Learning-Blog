@@ -2,9 +2,9 @@ name: Personal Blog CI
 
 on:
   push:
-    branches: [ dev001 ]
+    branches: [ "dev001" ]
   pull_request:
-    branches: [ dev001 ]
+    branches: [ "dev001" ]
 
 jobs:
   build:
