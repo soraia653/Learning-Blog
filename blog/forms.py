@@ -2,6 +2,8 @@ from django import forms
 from django.forms import TextInput, Textarea
 from .models import Post
 
+from ckeditor.fields import RichTextFormField
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -26,12 +28,13 @@ class PostForm(forms.ModelForm):
                     'class': 'form-control',
                 }
             ),
-            'body': forms.Textarea(
-                attrs={
-                    'placeholder': 'Be creative!',
-                    'class': 'form-control'
-                }
-            ),
+            # 'body': forms.Textarea(
+            #     attrs={
+            #         'placeholder': 'Be creative!',
+            #         'class': 'form-control'
+            #     }
+            # ),
+            'body': RichTextFormField(config_name='default'),
             'tags': forms.TextInput(
                 attrs={
                     'placeholder': 'Tag your post for easier search.', 

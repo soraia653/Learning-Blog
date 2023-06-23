@@ -2,11 +2,16 @@
 {% load custom_filters %}
 
 {% block body %}
+<style>
+  .custom-image {
+    width: 50%;
+  }
+</style>
 <div class="container">
     <h1 class="display-4 text-center mt-4 mb-5">{{ post.title }}</h1>
     
     <div class="text-center mb-4">
-        <img src="{{post.image_url}}" class="post-image center" alt="Post Image">
+        <img src="{{post.image_url}}" class="img-fluid custom-image" alt="Post Image">
     </div>
     <div class="post-details">
         <p class="post-author"><strong>Author:</strong> {{ post.author }}</p>
@@ -17,7 +22,7 @@
             {% endfor %}
           </p>
         <div class="post-body" style="font-weight: 400; letter-spacing: 0.05em; line-height: 1.8; text-align: justify !important;">
-            {{ post.body | linebreaks }}
+            {{ post.body | safe }}
         </div>
     </div>
 </div>

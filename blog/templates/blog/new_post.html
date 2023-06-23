@@ -8,6 +8,7 @@
         <div class="col-md-8 offset-md-2">
             <form method="post">
                 {% csrf_token %}
+                {{ form.media }}
                 <div class="mb-3">
                     <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
                     {{ form.title }}
