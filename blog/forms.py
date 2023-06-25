@@ -28,12 +28,6 @@ class PostForm(forms.ModelForm):
                     'class': 'form-control',
                 }
             ),
-            # 'body': forms.Textarea(
-            #     attrs={
-            #         'placeholder': 'Be creative!',
-            #         'class': 'form-control'
-            #     }
-            # ),
             'body': RichTextFormField(config_name='default'),
             'tags': forms.TextInput(
                 attrs={

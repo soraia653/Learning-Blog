@@ -2,6 +2,26 @@
 {% load custom_filters %}
 
 {% block body %}
+<style>
+  .image-wrapper {
+    max-width: 100%;
+    height: 0;
+    padding-bottom: 55%; /* Adjust the aspect ratio as needed */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .post-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+</style>
+
 <div class="container">
     <h1 class="display-4 text-center my-4">Posts for Tag Name</h1>
     
@@ -9,7 +29,9 @@
     <div class="card mb-3">
         <div class="row g-0">
           <div class="col-md-4">
-            <img src="{{post.image_url}}" class="img-fluid rounded-start">
+            <div class="image-wrapper">
+              <img src="{{ post.image_url }}" class="img-fluid rounded-start post-image">
+            </div>
           </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -25,7 +47,10 @@
                     <a href="{% url 'read_post' post.id %}" class="btn btn-primary">Read More</a>
                     {% if user.is_authenticated and user == post.author %}
                     <div class="btn-toolbar me-2 float-end" role="group" aria-label="Author buttons">
-                      <button href="{% url 'edit_post' post.id %}" type="button" class="btn btn-secondary me-2 btn-sm">Edit</button>
+                      <form method="POST" action="{% url 'edit_post' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary me-2 btn-sm">Edit</button>
+                      </form>
                       <button  
                       type="button" 
                       class="btn btn-danger btn-sm"

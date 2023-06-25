@@ -10,11 +10,7 @@ class Post(models.Model):
     slug_title = models.SlugField(max_length=255, unique=True)
     summary = models.TextField(max_length=200)
     image_url = models.URLField(blank=True)
-    #body = models.TextField()
-    body = RichTextField(null=True, blank=True, 
-    config_name="special", external_plugin_resources=[(
-    'youtube', '/static/shareledge/ckeditor-plugins/youtube/youtube/', 'plugin.js',
-    )])
+    body = RichTextField(null=True, blank=True)
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
