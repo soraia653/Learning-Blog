@@ -1,0 +1,111 @@
+{% extends "blog/base.html" %}
+{% load custom_filters %}
+
+{% block body %}
+<style>
+  .image-wrapper {
+    max-width: 100%;
+    height: 0;
+    padding-bottom: 55%; /* Adjust the aspect ratio as needed */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .post-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+</style>
+<div class="container">
+    <h1 class="display-4 text-center my-4">Learning Blog</h1>
+    
+    {% for post in posts %}
+    <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <div class="image-wrapper">
+              <img src="{{ post.image_url }}" class="img-fluid rounded-start post-image">
+            </div>
+          </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.summary }}</p>
+                    <p class="card-text"><small class="text-muted">{{post.published_date}}</small></p>
+                    
+                    <p class="card-text">
+                      {% for tag in post.tags.all %}
+                        <span href="#" class="badge rounded-pill bg-success">{{ tag.name }}</span>
+                      {% endfor %}
+                    </p>       
+                    <a href="{% url 'read_post' post.id %}" class="btn btn-primary">Read More</a>
+                    {% if user.is_authenticated and user == post.author %}
+                    <div class="btn-toolbar me-2 float-end" role="group" aria-label="Author buttons">
+                      <form method="POST" action="{% url 'edit_post' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary me-2 btn-sm">Edit</button>
+                      </form>
+                      <button  
+                      type="button" 
+                      class="btn btn-danger btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteModal"
+                      >Delete</button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Window Modal -->
+    <div class="modal" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">You sure you want to delete this post?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>This action is irreversible!</p>
+          </div>
+    
+          <div class="modal-footer">
+            <form method="POST" action="{% url 'delete_post' post.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Yes, delete</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {% endfor %}
+  </div>
+  
+{% endblock %}
+
+{% block tags %}
+<div class="list-group">  
+  {% for letter in sorted_keys %}
+    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" disabled>
+      <strong>{{ letter }}</strong>
+      <span class="badge bg-primary rounded-pill"> {{tags_dict|get_count:letter }} </span>
+      {% for tag in tags_dict|get_tags:letter %}
+      <form method="POST" action="{% url 'posts_per_tag' tag.id %}">
+        {% csrf_token %}
+        <button type="submit" class="list-group-item list-group-item-action">
+          {{ tag.name }}
+        </button>
+      </form>
+      {% endfor %}
+      </button>
+  {% endfor %}
+  </div>
+{% endblock %}
