@@ -46,10 +46,9 @@
                     <a href="{% url 'read_post' post.id %}" class="btn btn-primary">Read More</a>
                     {% if user.is_authenticated and user == post.author %}
                     <div class="btn-toolbar me-2 float-end" role="group" aria-label="Author buttons">
-                      <form method="POST" action="{% url 'edit_post' post.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-secondary me-2 btn-sm">Edit</button>
-                      </form>
+                      <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary me-2 btn-sm">
+                        Edit
+                      </a>
                       <button  
                       type="button" 
                       class="btn btn-danger btn-sm"

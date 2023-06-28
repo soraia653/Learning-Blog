@@ -92,7 +92,6 @@ def edit_post(request, post_id):
     
     context_dict = {
         "form": form,
-        "post": post,
     }
 
     return render(request, "blog/edit_post.html", context_dict)
