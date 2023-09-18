@@ -1,9 +1,11 @@
 from django.db import IntegrityError
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LoginView, LogoutView
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .models import Post, User
 from .forms import PostForm
@@ -24,140 +26,7 @@ def generate_tags_dict():
     sorted_keys = sorted(tags_dict.keys())
     return sorted_keys, tags_dict
 
-# Create your views here.
-def index(request):
-    all_posts = Post.objects.all()
-
-    sorted_keys, tags_dict = generate_tags_dict()
-
-    context_dict = {
-        "posts": all_posts,
-        "sorted_keys": sorted_keys,
-        "tags_dict": tags_dict,
-    }
-
-    return render(request, "blog/all_posts.html", context_dict)
-
-def read_post(request, post_id):
-    select_post = Post.objects.get(id=post_id)
-
-    sorted_keys, tags_dict = generate_tags_dict()
-
-    context_dict = {
-        "post": select_post,
-        "sorted_keys": sorted_keys,
-        "tags_dict": tags_dict,
-    }
-
-    return render(request, "blog/read_post.html", context_dict)
-
-def new_post(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            new_post = form.save(commit=False)
-            new_post.author = User.objects.get(username=request.user)
-            new_post.save()
-            form.save_m2m()
-            return redirect("main_page")
-    else:
-        form = PostForm()
-
-    context_dict = {
-        "form": form,
-    }
-
-    return render(request, "blog/new_post.html", context_dict)
-
-def edit_post(request, post_id):
-
-    post = get_object_or_404(Post, id=post_id)
-
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-
-        if form.is_valid():
-            form.save()
-            return redirect("main_page")
-    else:
-        form = PostForm(instance=post)
-    
-    context_dict = {
-        "form": form,
-    }
-
-    return render(request, "blog/edit_post.html", context_dict)
-
-def delete_post(request, post_id):
-    
-    post = get_object_or_404(Post, id=post_id)
-
-    if request.method == "POST":
-        post.delete()
-        return redirect("main_page")
-    
-    context_dict = {
-        "post": post,
-    }
-    
-    return render(request, "blog/delete_post.html", context_dict)
-
-
-    return render(request)
-
-def get_posts_per_tag(request, tag_id):
-
-    filtered_posts = []
-    
-    if request.method == "POST":
-        filtered_posts = Post.objects.filter(tags__id=tag_id)
-    
-    all_tags = Post.tags.all().order_by('name')
-
-    # create dictionary for tags from A-Z
-    tags_dict = {}
-
-    for tag in all_tags:
-        first_letter = tag.name[0].upper()
-        if first_letter not in tags_dict:
-            tags_dict[first_letter] = {'tags': [], 'count': 0}
-        tags_dict[first_letter]['tags'].append(tag)
-        tags_dict[first_letter]['count'] += 1
-    
-    sorted_keys = sorted(tags_dict.keys())
-
-    context_dict = {
-        "filtered_posts": filtered_posts,
-        "sorted_keys": sorted_keys,
-        "tags_dict": tags_dict,
-    }
-
-    return render(request, "blog/posts_per_tag.html", context_dict)
-
-def login_view(request):
-
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            redirect("main_page")
-        else:
-            error_dict = {
-                "message": "Invalid username and/or password."
-            }
-
-            return render(request, "blog/all_posts.html", error_dict)
-    
-    return redirect("main_page")
-
-def logout_view(request):
-    logout(request)
-    return redirect("main_page")
-
+# Create function-based views here.
 def register_view(request):
 
     if request.method == "POST":
@@ -191,3 +60,86 @@ def register_view(request):
             return render(request, "blog/registration.html")
     
     return render(request, "blog/registration.html")
+
+def index(request):
+    all_posts = Post.objects.all()
+
+    sorted_keys, tags_dict = generate_tags_dict()
+
+    context_dict = {
+        "posts": all_posts,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
+    }
+
+    return render(request, "blog/all_posts.html", context_dict)
+
+def read_post(request, post_id):
+    select_post = Post.objects.get(id=post_id)
+
+    sorted_keys, tags_dict = generate_tags_dict()
+
+    context_dict = {
+        "post": select_post,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
+    }
+
+    return render(request, "blog/read_post.html", context_dict)
+
+def get_posts_per_tag(request, tag_id):
+
+    filtered_posts = []
+    
+    if request.method == "POST":
+        filtered_posts = Post.objects.filter(tags__id=tag_id)
+    
+    all_tags = Post.tags.all().order_by('name')
+
+    # create dictionary for tags from A-Z
+    tags_dict = {}
+
+    for tag in all_tags:
+        first_letter = tag.name[0].upper()
+        if first_letter not in tags_dict:
+            tags_dict[first_letter] = {'tags': [], 'count': 0}
+        tags_dict[first_letter]['tags'].append(tag)
+        tags_dict[first_letter]['count'] += 1
+    
+    sorted_keys = sorted(tags_dict.keys())
+
+    context_dict = {
+        "filtered_posts": filtered_posts,
+        "sorted_keys": sorted_keys,
+        "tags_dict": tags_dict,
+    }
+
+    return render(request, "blog/posts_per_tag.html", context_dict)
+
+# Create class-based views here.
+class NewPostView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = "blog/new_post.html"
+    success_url = reverse_lazy("main_page")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class EditPostView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = "blog/edit_post.html"
+    success_url = reverse_lazy("main_page")
+
+class DeletePostView(DeleteView):
+    model = Post
+    success_url = reverse_lazy("main_page")
+
+class CustomLoginView(LoginView):
+    template_name = "blog/all_posts.html"
+    next_page = reverse_lazy("main_page")
+
+class CustomLogoutView(LogoutView):
+    next_page = reverse_lazy("main_page")
