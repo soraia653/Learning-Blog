@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
