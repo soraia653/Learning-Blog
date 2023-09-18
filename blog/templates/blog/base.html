@@ -37,6 +37,11 @@
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item">
+                            <a id="drafts" class="nav-link" href="{% url 'drafts' %}">
+                                Drafts
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a id="newPost" class="nav-link" href="{% url 'new_post' %}">
                                 New Post
                             </a>

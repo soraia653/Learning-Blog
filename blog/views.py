@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -7,6 +8,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, User
 from .forms import PostForm
@@ -133,6 +136,25 @@ class EditPostView(UpdateView):
     form_class = PostForm
     template_name = "blog/edit_post.html"
     success_url = reverse_lazy("main_page")
+
+
+class DraftPostView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = "blog/all_drafts.html"
+    context_object_name = "drafts"
+
+    def get_queryset(self):
+        author = self.request.user
+        return Post.objects.filter(author=author, status='draft')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        sorted_keys, tags_dict = generate_tags_dict()
+        context['sorted_keys'] = sorted_keys
+        context['tags_dict'] = tags_dict
+
+        return context
 
 class DeletePostView(DeleteView):
     model = Post

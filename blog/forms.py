@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import TextInput, Textarea
+from taggit.forms import TagWidget
 from .models import Post
 
 from ckeditor.fields import RichTextFormField
@@ -36,10 +37,9 @@ class PostForm(forms.ModelForm):
                 }
             ),
 
-            'tags': forms.TextInput(
+            'tags': TagWidget(
                 attrs={
-                    'placeholder': 'Tag your post for easier search.', 
-                    'class': 'form-control'
-                    }
+                    'class' : 'form-control'
+                }
             ),
         }
