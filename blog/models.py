@@ -38,3 +38,16 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         self.slug_title = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
+
+class Comment(models.Model):
+
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-create_date']
+    
+    def __str__(self) -> str:
+        return f"Comment by {self.username} to post {self.post}"
