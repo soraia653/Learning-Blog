@@ -8,13 +8,10 @@ from django.core.exceptions import ValidationError
 from .models import Post, User
 from .forms import PostForm
 
-# Create your views here.
-def index(request):
-    all_posts = Post.objects.all()
+# Create utility functions here.
+def generate_tags_dict():
 
     all_tags = Post.tags.all().order_by('name')
-
-    # create dictionary for tags from A-Z
     tags_dict = {}
 
     for tag in all_tags:
@@ -23,8 +20,15 @@ def index(request):
             tags_dict[first_letter] = {'tags': [], 'count': 0}
         tags_dict[first_letter]['tags'].append(tag)
         tags_dict[first_letter]['count'] += 1
-    
+
     sorted_keys = sorted(tags_dict.keys())
+    return sorted_keys, tags_dict
+
+# Create your views here.
+def index(request):
+    all_posts = Post.objects.all()
+
+    sorted_keys, tags_dict = generate_tags_dict()
 
     context_dict = {
         "posts": all_posts,
@@ -37,19 +41,7 @@ def index(request):
 def read_post(request, post_id):
     select_post = Post.objects.get(id=post_id)
 
-    all_tags = Post.tags.all().order_by('name')
-
-    # create dictionary for tags from A-Z
-    tags_dict = {}
-
-    for tag in all_tags:
-        first_letter = tag.name[0].upper()
-        if first_letter not in tags_dict:
-            tags_dict[first_letter] = {'tags': [], 'count': 0}
-        tags_dict[first_letter]['tags'].append(tag)
-        tags_dict[first_letter]['count'] += 1
-    
-    sorted_keys = sorted(tags_dict.keys())
+    sorted_keys, tags_dict = generate_tags_dict()
 
     context_dict = {
         "post": select_post,

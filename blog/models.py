@@ -5,7 +5,9 @@ from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
+
 class Post(models.Model):
+
     title = models.CharField(max_length=125, unique=True)
     slug_title = models.SlugField(max_length=255, unique=True)
     summary = models.TextField(max_length=200)
