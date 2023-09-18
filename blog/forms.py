@@ -7,7 +7,7 @@ from ckeditor.fields import RichTextFormField
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'summary', 'image_url', 'body', 'tags']
+        fields = ['title', 'summary', 'image_url', 'body', 'status', 'tags']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -29,6 +29,13 @@ class PostForm(forms.ModelForm):
                 }
             ),
             'body': RichTextFormField(config_name='default'),
+
+            'status': forms.Select(
+                attrs={
+                    'class': 'form-select'
+                }
+            ),
+
             'tags': forms.TextInput(
                 attrs={
                     'placeholder': 'Tag your post for easier search.', 

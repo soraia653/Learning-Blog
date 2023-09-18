@@ -63,7 +63,7 @@ def register_view(request):
     return render(request, "blog/registration.html")
 
 def index(request):
-    all_posts = Post.objects.all()
+    all_posts = Post.objects.filter(status="published")
 
     sorted_keys, tags_dict = generate_tags_dict()
 

@@ -8,6 +8,11 @@ from ckeditor.fields import RichTextField
 
 class Post(models.Model):
 
+    PUBLICATION_STATUS_CHOICES = (
+    ('draft', 'Draft'),
+    ('published', 'Published'),
+    )
+
     title = models.CharField(max_length=125, unique=True)
     slug_title = models.SlugField(max_length=255, unique=True)
     summary = models.TextField(max_length=200)
@@ -15,7 +20,12 @@ class Post(models.Model):
     body = RichTextField(null=True, blank=True)
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.BooleanField(default=True)
+
+    status = models.CharField(
+        max_length = 9,
+        choices = PUBLICATION_STATUS_CHOICES,
+        default = 'published'
+    )
 
     tags = TaggableManager()
 
