@@ -8,5 +8,8 @@ python3.9 get-pip.py
 # Install project requirements
 pip install -r requirements.txt
 
+python 3.9 manage.py makemigrations
+python 3.9 manage.py migrate
+
 # Build staticfiles
 python3.9 manage.py collectstatic
