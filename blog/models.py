@@ -1,10 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
+class User(AbstractUser):
+    user_image = models.ImageField(upload_to= 'user_images/')
 
 class Post(models.Model):
 

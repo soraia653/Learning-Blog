@@ -146,3 +146,6 @@ CKEDITOR_CONFIGS = {
         'allowedContent': True,
         },
     }
+
+# reference to my custom User model
+AUTH_USER_MODEL = 'blog.User'
