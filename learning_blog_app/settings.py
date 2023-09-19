@@ -27,12 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '.vercel.app',
     '127.0.0.1',
-    'localhost'
+    'localhost',
+    'jubilant-goldfish-6jr5jvg6625rg5-8000.app.github.dev'
 ]
 
 
@@ -145,10 +146,3 @@ CKEDITOR_CONFIGS = {
         'allowedContent': True,
         },
     }
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 60
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_PRELOAD = True
