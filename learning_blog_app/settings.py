@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     '.vercel.app',
     '127.0.0.1',
     'localhost',
-    'jubilant-goldfish-6jr5jvg6625rg5-8000.app.github.dev'
+    'jubilant-goldfish-6jr5jvg6625rg5-35347.app.github.dev'
 ]
 
 
@@ -134,6 +134,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+
+MEDIA_URL = '/media/'
+
+# means the media root will be located in our project directory.
+# When we upload an image, the image will be saved in the media directory
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
