@@ -81,13 +81,14 @@
               height="35"
             />
             <div class="form-outline w-100">
-              <textarea class="form-control" placeholder="Leave your comment here." id="textAreaExample" rows="4"
-                style="background: #fff;"></textarea>
+              <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-primary btn-sm float-right">Post comment</button>
+              </form>
             </div>
           </div>
           <div class="float-end mt-3 pt-1">
-            <button type="button" class="btn btn-primary btn-sm">Post comment</button>
-            <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
           </div>
         </div>
       </div>
