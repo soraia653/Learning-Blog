@@ -12,7 +12,7 @@ from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, User
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 # Create utility functions here.
 def generate_tags_dict():
@@ -83,10 +83,22 @@ def read_post(request, post_id):
 
     sorted_keys, tags_dict = generate_tags_dict()
 
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = select_post
+            comment.username = request.user
+            comment.save()
+            return redirect('read_post', post_id)
+    else:
+        form = CommentForm()
+
     context_dict = {
         "post": select_post,
         "sorted_keys": sorted_keys,
         "tags_dict": tags_dict,
+        "form": form
     }
 
     return render(request, "blog/read_post.html", context_dict)
