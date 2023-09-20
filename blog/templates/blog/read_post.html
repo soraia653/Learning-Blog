@@ -27,26 +27,29 @@
           alt="user-profile-pic"
         >
     </div>
-    <h1 class="display-4 text-center mt-4 mb-5">{{ post.title }}</h1>
-    <h3>by
-      <small class="text-muted">{{ post.author }}</small>
-    </h3>
+    <h1 class="display-4 text-center mt-4">{{ post.title }}</h1>
+    <div class="post-details">
+      <h5 class="text-center"><small class="text-muted">by</small>
+        {{ post.author }}
+      </h5>
+      <p class="text-center text-muted">{{ post.published_date }}</p>
+    </div>
+    
     <div class="text-center mb-4">
         <img src="{{post.image_url}}" class="img-fluid custom-image" alt="Post Image">
     </div>
-    <div class="post-details">
-        <p class="post-author"><strong>Author:</strong> {{ post.author }}</p>
-        <p class="post-date"><strong>Published Date:</strong> {{ post.published_date }}</p>
-        <p class="card-text">
-            {% for tag in post.tags.all %}
-            <span class="badge rounded-pill bg-success">{{ tag.name }}</span>
-            {% endfor %}
-          </p>
-        <div class="post-body" style="font-weight: 400; letter-spacing: 0.05em; line-height: 1.8; text-align: justify !important;">
-            {{ post.body | safe }}
-        </div>
-  </div>
-  <h3 class="mb-3">Comment Section</h3>
+
+    <div class="post-body" style="font-weight: 400; letter-spacing: 0.05em; line-height: 1.8; text-align: justify !important;">
+        {{ post.body | safe }}
+    </div>
+
+  <p class="card-text mt-2 mb-5">
+    Tags:
+    {% for tag in post.tags.all %}
+    <span class="badge rounded-pill bg-success">{{ tag.name }}</span>
+    {% endfor %}
+  </p>
+  <h3 class="mb-4">Comment Section</h3>
   {% for comment in post.comment_set.all %}
   <div>
     <div class="card">
