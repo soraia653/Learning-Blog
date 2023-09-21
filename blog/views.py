@@ -10,6 +10,8 @@ from django.core.exceptions import ValidationError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 from .models import Post, User
 from .forms import PostForm, CommentForm
@@ -83,14 +85,23 @@ def read_post(request, post_id):
 
     sorted_keys, tags_dict = generate_tags_dict()
 
+    # allow to user to comment on post
     if request.method == 'POST':
         form = CommentForm(request.POST)
+
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = select_post
             comment.username = request.user
             comment.save()
-            return redirect('read_post', post_id)
+
+            # render comment as HTML string
+            comment_html = render_to_string(
+                'blog/comment.html',
+                {'comment': comment}
+            )
+
+            return JsonResponse({'comment_html': comment_html})
     else:
         form = CommentForm()
 
@@ -102,6 +113,7 @@ def read_post(request, post_id):
     }
 
     return render(request, "blog/read_post.html", context_dict)
+
 
 def get_posts_per_tag(request, tag_id):
 
