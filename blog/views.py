@@ -12,8 +12,9 @@ from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import Post, User
+from .models import Post, User, Comment
 from .forms import PostForm, CommentForm
 
 # Create utility functions here.
@@ -98,7 +99,7 @@ def read_post(request, post_id):
             # render comment as HTML string
             comment_html = render_to_string(
                 'blog/comment.html',
-                {'comment': comment}
+                {'comment': comment, 'user': request.user}
             )
 
             return JsonResponse({'comment_html': comment_html})
@@ -114,6 +115,14 @@ def read_post(request, post_id):
 
     return render(request, "blog/read_post.html", context_dict)
 
+@csrf_exempt
+def delete_comment(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return JsonResponse({'message': 'OK'})
+    except:
+        return JsonResponse({'message' : 'Comment not found.'})
 
 def get_posts_per_tag(request, tag_id):
 
@@ -160,7 +169,6 @@ class EditPostView(UpdateView):
     form_class = PostForm
     template_name = "blog/edit_post.html"
     success_url = reverse_lazy("main_page")
-
 
 class DraftPostView(LoginRequiredMixin, ListView):
     model = Post

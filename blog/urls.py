@@ -10,6 +10,7 @@ urlpatterns = [
     path('new_post', views.NewPostView.as_view(), name="new_post"),
     path('edit_post/<int:pk>', views.EditPostView.as_view(), name="edit_post"),
     path('delete_post/<int:pk>', views.DeletePostView.as_view(), name="delete_post"),
+    path('delete_comment/<int:comment_id>', views.delete_comment, name="delete_comment"),
     path('tags/posts/<int:tag_id>', views.get_posts_per_tag, name="posts_per_tag"),
     path('registration', views.register_view, name="registration"),
 ]
