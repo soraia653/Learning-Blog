@@ -1,0 +1,36 @@
+body {
+    margin-bottom: 20px;
+  }
+
+  .custom-image {
+    width: 50%;
+  }
+
+  .profile-pic {
+    transition: all 0.2s;
+  }
+  
+  .profile-pic:hover {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  @keyframes pop {
+
+    50% {
+      transform: scale(1.2);
+    }
+
+    100%{
+      transform: scale(1);
+    }
+  }
+
+  .new-comment {
+    animation: pop .2s linear;
+    z-index: 2;
+  }
+
+  .comments-container {
+    z-index: 1;
+  }

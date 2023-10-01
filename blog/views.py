@@ -1,4 +1,3 @@
-from typing import Any
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -10,9 +9,13 @@ from django.core.exceptions import ValidationError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import Post, User
-from .forms import PostForm
+from .models import Post, User, Comment
+from .forms import PostForm, CommentForm
+
 
 # Create utility functions here.
 def generate_tags_dict():
@@ -29,6 +32,7 @@ def generate_tags_dict():
 
     sorted_keys = sorted(tags_dict.keys())
     return sorted_keys, tags_dict
+
 
 # Create function-based views here.
 def register_view(request):
@@ -52,18 +56,28 @@ def register_view(request):
         if password != confirmation:
             messages.error(request, "Passwords do not match.")
             return render(request, "blog/registration.html")
-        
+
+        # check if image was uploaded
+        if 'photo' in request.FILES:
+            user_image = request.FILES['photo']
+
         # create new user
         try:
-            new_user = User.objects.create_user(username, email, password)
+            new_user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                user_image=user_image
+            )
             new_user.save()
             login(request, new_user)
             return redirect("main_page")
         except IntegrityError as e:
             messages.error(request, f"Something went wrong: {e}")
             return render(request, "blog/registration.html")
-    
+
     return render(request, "blog/registration.html")
+
 
 def index(request):
     all_posts = Post.objects.filter(status="published")
@@ -78,23 +92,56 @@ def index(request):
 
     return render(request, "blog/all_posts.html", context_dict)
 
+
 def read_post(request, post_id):
     select_post = Post.objects.get(id=post_id)
 
     sorted_keys, tags_dict = generate_tags_dict()
 
+    # allow to user to comment on post
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = select_post
+            comment.username = request.user
+            comment.save()
+
+            # render comment as HTML string
+            comment_html = render_to_string(
+                'blog/comment.html',
+                {'comment': comment, 'user': request.user}
+            )
+
+            return JsonResponse({'comment_html': comment_html})
+    else:
+        form = CommentForm()
+
     context_dict = {
         "post": select_post,
         "sorted_keys": sorted_keys,
         "tags_dict": tags_dict,
+        "form": form
     }
 
     return render(request, "blog/read_post.html", context_dict)
 
+
+@csrf_exempt
+def delete_comment(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return JsonResponse({'message': 'OK'})
+    except:
+        return JsonResponse({'message': 'Something went wrong.'})
+
+
 def get_posts_per_tag(request, tag_id):
 
     filtered_posts = []
-    
+
     if request.method == "POST":
         filtered_posts = Post.objects.filter(tags__id=tag_id)
     
@@ -120,6 +167,7 @@ def get_posts_per_tag(request, tag_id):
 
     return render(request, "blog/posts_per_tag.html", context_dict)
 
+
 # Create class-based views here.
 class NewPostView(CreateView):
     model = Post
@@ -130,6 +178,7 @@ class NewPostView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
 
 class EditPostView(UpdateView):
     model = Post
@@ -156,13 +205,16 @@ class DraftPostView(LoginRequiredMixin, ListView):
 
         return context
 
+
 class DeletePostView(DeleteView):
     model = Post
     success_url = reverse_lazy("main_page")
 
+
 class CustomLoginView(LoginView):
     template_name = "blog/all_posts.html"
     next_page = reverse_lazy("main_page")
+
 
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy("main_page")

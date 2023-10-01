@@ -1,0 +1,7 @@
+.form-label{
+    display: flex;
+}
+
+.django-ckeditor-widget {
+    display: flex !important;
+}

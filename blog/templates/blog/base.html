@@ -13,6 +13,13 @@
 
         <!-- Load FontAwesome icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        {% block css %}
+        {% endblock %}
+
+        {% block js %}
+        {% endblock %}
 
     </head>
     <body>
@@ -68,8 +75,13 @@
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{%url 'logout' %}">
-                                <strong>{{request.user}}</strong> (Log Out)
+                            <a class="nav-link" href="#">
+                                <strong>{{request.user}}</strong>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                Log Out
                             </a>
                         </li>
                         {% endif %}
@@ -94,6 +106,6 @@
                 {% block tags %}
                 {% endblock %}
             </div>
-          </div>
+        </div>
     </body>
 </html>
