@@ -89,6 +89,9 @@ WSGI_APPLICATION = 'learning_blog_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': f'-c search_path={os.environ.get("POSTGRES_SCHEMA")}'
+        },
         'NAME': os.environ.get("POSTGRES_DATABASE"),
         'USER': os.environ.get("POSTGRES_USER"),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),

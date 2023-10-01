@@ -1,26 +1,12 @@
 {% extends "blog/base.html" %}
 {% load custom_filters %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/img_styling.css' %}">
+{% endblock %}
 
 {% block body %}
-<style>
-  .image-wrapper {
-    max-width: 100%;
-    height: 0;
-    padding-bottom: 55%; /* Adjust the aspect ratio as needed */
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .post-image {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-</style>
 <div class="container">
     <h1 class="display-4 text-center my-4">Learning Blog</h1>
     

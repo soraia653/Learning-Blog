@@ -4,16 +4,18 @@ from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
+
 class User(AbstractUser):
     user_image = models.ImageField(
         default='default_image.png',
-        upload_to= 'user_images/'
+        upload_to='user_images/'
     )
+
 
 class Post(models.Model):
     PUBLICATION_STATUS_CHOICES = (
-    ('draft', 'Draft'),
-    ('published', 'Published'),
+        ('draft', 'Draft'),
+        ('published', 'Published'),
     )
 
     title = models.CharField(max_length=125, unique=True)
@@ -25,9 +27,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     status = models.CharField(
-        max_length = 9,
-        choices = PUBLICATION_STATUS_CHOICES,
-        default = 'published'
+        max_length=9,
+        choices=PUBLICATION_STATUS_CHOICES,
+        default='published'
     )
 
     tags = TaggableManager()
@@ -37,10 +39,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def save(self, *args, **kwargs):
         self.slug_title = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
+
 
 class Comment(models.Model):
 
@@ -51,6 +54,6 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-create_date']
-    
+
     def __str__(self) -> str:
         return f"Comment by {self.username} to post {self.post}"
