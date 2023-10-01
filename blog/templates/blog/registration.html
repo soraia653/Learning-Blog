@@ -1,27 +1,11 @@
 {% extends "blog/base.html" %}
+{% load static %}
+
+{% block js %}
+<script src="{% static 'blog/js/read_post.js' %}"></script>
+{% endblock %}
 
 {% block body %}
-<script>
-    $(document).ready(function () {
-        $('#photo').change(function () {
-            var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#user-photo')
-                    .attr('src', e.target.result)
-                    .attr('width', '150')
-                    .attr('height', '150')
-                    ;
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        });
-    });
-</script>
-
 <div class="container">
     <h1 class="display-4 text-center my-4">Create New Account</h1>
     <div class="alert alert-danger {% if messages %}d-block{% else %}d-none{% endif %}">

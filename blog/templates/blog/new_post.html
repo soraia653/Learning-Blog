@@ -1,16 +1,11 @@
 {% extends "blog/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/new_post.css' %}">
+{% endblock %}
 
 {% block body %}
-<style>
-    .form-label{
-        display: flex;
-    }
-
-    .django-ckeditor-widget {
-        display: flex !important;
-    }
-</style>
-
 <div class="container">
     <h1 class="display-4 text-center my-4">New Post</h1>
     <div class="row">
