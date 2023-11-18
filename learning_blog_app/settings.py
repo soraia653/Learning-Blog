@@ -31,10 +31,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '.vercel.app',
     '127.0.0.1',
     'localhost',
-    'jubilant-goldfish-6jr5jvg6625rg5-35347.app.github.dev'
+    'learning-blog-g93m.onrender.com'
 ]
 
 
