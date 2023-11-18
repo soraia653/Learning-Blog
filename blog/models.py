@@ -7,7 +7,7 @@ from ckeditor.fields import RichTextField
 
 class User(AbstractUser):
     user_image = models.ImageField(
-        default='default_image.png',
+        default='https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png',
         upload_to='user_images/'
     )
 
