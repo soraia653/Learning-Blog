@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -87,17 +88,9 @@ WSGI_APPLICATION = 'learning_blog_app.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'OPTIONS': {
-            'options': f'-c search_path={os.environ.get("POSTGRES_SCHEMA")}'
-        },
-        'NAME': os.environ.get("POSTGRES_DATABASE"),
-        'USER': os.environ.get("POSTGRES_USER"),
-        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': os.environ.get("POSTGRES_HOST"),
-        'PORT': os.environ.get("POSTGRES_PORT"),
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('POSTGRES_URL')
+    )
 }
 
 
@@ -136,12 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-
 MEDIA_URL = '/media/'
 
-# means the media root will be located in our project directory.
-# When we upload an image, the image will be saved in the media directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
