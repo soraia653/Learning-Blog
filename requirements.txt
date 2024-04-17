@@ -10,7 +10,7 @@ django-ckeditor==6.7.0
 django-js-asset==2.1.0
 django-storages==1.14.2
 django-taggit==5.0.1
-gunicorn==21.2.0
+gunicorn==22.0.0
 jmespath==1.0.1
 packaging==23.2
 Pillow==10.2.0
