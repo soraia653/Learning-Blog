@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, User, Comment
 from .forms import PostForm, CommentForm
@@ -20,15 +21,15 @@ from .forms import PostForm, CommentForm
 # Create utility functions here.
 def generate_tags_dict():
 
-    all_tags = Post.tags.all().order_by('name')
+    all_tags = Post.tags.all().order_by("name")
     tags_dict = {}
 
     for tag in all_tags:
         first_letter = tag.name[0].upper()
         if first_letter not in tags_dict:
-            tags_dict[first_letter] = {'tags': [], 'count': 0}
-        tags_dict[first_letter]['tags'].append(tag)
-        tags_dict[first_letter]['count'] += 1
+            tags_dict[first_letter] = {"tags": [], "count": 0}
+        tags_dict[first_letter]["tags"].append(tag)
+        tags_dict[first_letter]["count"] += 1
 
     sorted_keys = sorted(tags_dict.keys())
     return sorted_keys, tags_dict
@@ -58,16 +59,13 @@ def register_view(request):
             return render(request, "blog/registration.html")
 
         # check if image was uploaded
-        if 'photo' in request.FILES:
-            user_image = request.FILES['photo']
+        if "photo" in request.FILES:
+            user_image = request.FILES["photo"]
 
         # create new user
         try:
             new_user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-                user_image=user_image
+                username=username, email=email, password=password, user_image=user_image
             )
             new_user.save()
             login(request, new_user)
@@ -79,6 +77,7 @@ def register_view(request):
     return render(request, "blog/registration.html")
 
 
+@login_required(login_url="login")
 def index(request):
     all_posts = Post.objects.filter(status="published")
 
@@ -93,13 +92,14 @@ def index(request):
     return render(request, "blog/all_posts.html", context_dict)
 
 
+@login_required(login_url="login")
 def read_post(request, post_id):
     select_post = Post.objects.get(id=post_id)
 
     sorted_keys, tags_dict = generate_tags_dict()
 
     # allow to user to comment on post
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
 
         if form.is_valid():
@@ -110,11 +110,10 @@ def read_post(request, post_id):
 
             # render comment as HTML string
             comment_html = render_to_string(
-                'blog/comment.html',
-                {'comment': comment, 'user': request.user}
+                "blog/comment.html", {"comment": comment, "user": request.user}
             )
 
-            return JsonResponse({'comment_html': comment_html})
+            return JsonResponse({"comment_html": comment_html})
     else:
         form = CommentForm()
 
@@ -122,7 +121,7 @@ def read_post(request, post_id):
         "post": select_post,
         "sorted_keys": sorted_keys,
         "tags_dict": tags_dict,
-        "form": form
+        "form": form,
     }
 
     return render(request, "blog/read_post.html", context_dict)
@@ -133,9 +132,9 @@ def delete_comment(request, comment_id):
     try:
         comment = Comment.objects.get(id=comment_id)
         comment.delete()
-        return JsonResponse({'message': 'OK'})
+        return JsonResponse({"message": "OK"})
     except:
-        return JsonResponse({'message': 'Something went wrong.'})
+        return JsonResponse({"message": "Something went wrong."})
 
 
 def get_posts_per_tag(request, tag_id):
@@ -144,8 +143,8 @@ def get_posts_per_tag(request, tag_id):
 
     if request.method == "POST":
         filtered_posts = Post.objects.filter(tags__id=tag_id)
-    
-    all_tags = Post.tags.all().order_by('name')
+
+    all_tags = Post.tags.all().order_by("name")
 
     # create dictionary for tags from A-Z
     tags_dict = {}
@@ -153,10 +152,10 @@ def get_posts_per_tag(request, tag_id):
     for tag in all_tags:
         first_letter = tag.name[0].upper()
         if first_letter not in tags_dict:
-            tags_dict[first_letter] = {'tags': [], 'count': 0}
-        tags_dict[first_letter]['tags'].append(tag)
-        tags_dict[first_letter]['count'] += 1
-    
+            tags_dict[first_letter] = {"tags": [], "count": 0}
+        tags_dict[first_letter]["tags"].append(tag)
+        tags_dict[first_letter]["count"] += 1
+
     sorted_keys = sorted(tags_dict.keys())
 
     context_dict = {
@@ -194,14 +193,14 @@ class DraftPostView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         author = self.request.user
-        return Post.objects.filter(author=author, status='draft')
+        return Post.objects.filter(author=author, status="draft")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         sorted_keys, tags_dict = generate_tags_dict()
-        context['sorted_keys'] = sorted_keys
-        context['tags_dict'] = tags_dict
+        context["sorted_keys"] = sorted_keys
+        context["tags_dict"] = tags_dict
 
         return context
 
@@ -212,9 +211,8 @@ class DeletePostView(DeleteView):
 
 
 class CustomLoginView(LoginView):
-    template_name = "blog/all_posts.html"
-    next_page = reverse_lazy("main_page")
+    template_name = "blog/login.html"
 
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy("main_page")
+    pass

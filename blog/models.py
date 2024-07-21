@@ -2,40 +2,37 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class User(AbstractUser):
     user_image = models.ImageField(
-        default='user-profile.jpeg',
-        upload_to='user_images/'
+        default="user-profile.jpeg", upload_to="user_images/"
     )
 
 
 class Post(models.Model):
     PUBLICATION_STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
+        ("draft", "Draft"),
+        ("published", "Published"),
     )
 
     title = models.CharField(max_length=125, unique=True)
     slug_title = models.SlugField(max_length=255, unique=True)
     summary = models.TextField(max_length=200)
     image_url = models.URLField(blank=True)
-    body = RichTextField(null=True, blank=True)
+    body = CKEditor5Field("Body", config_name="extends")
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     status = models.CharField(
-        max_length=9,
-        choices=PUBLICATION_STATUS_CHOICES,
-        default='published'
+        max_length=9, choices=PUBLICATION_STATUS_CHOICES, default="published"
     )
 
     tags = TaggableManager()
 
     class Meta:
-        ordering = ['-published_date']
+        ordering = ["-published_date"]
 
     def __str__(self):
         return self.title
@@ -53,7 +50,7 @@ class Comment(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-create_date']
+        ordering = ["-create_date"]
 
     def __str__(self) -> str:
         return f"Comment by {self.username} to post {self.post}"
