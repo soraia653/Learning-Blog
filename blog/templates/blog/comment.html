@@ -4,7 +4,7 @@
         <div class="d-flex" style="justify-content: space-between;">
           <div class="d-flex flex-start align-items-center">
             <img class="rounded-circle shadow-1-strong me-3"
-              src="{{comment.username.user_image.url}}" alt="avatar" width="50"
+              src="{% if comment.username.user.user_image %}{{ comment.username.user.user_image.url }}{% else %}/mediafiles/defaults/default-image.png{% endif %}" alt="avatar" width="50"
               height="50" />
             <div>
               <h6 class="fw-bold text-primary mb-1">{{comment.username}}</h6>

@@ -58,8 +58,7 @@ def register_view(request):
             return render(request, "blog/registration.html")
 
         # check if image was uploaded
-        if 'photo' in request.FILES:
-            user_image = request.FILES['photo']
+        user_image = request.FILES.get('photo')
 
         # create new user
         try:

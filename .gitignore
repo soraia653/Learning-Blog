@@ -139,7 +139,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-blogenv
+blog_env
 
 # Spyder project settings
 .spyderproject
@@ -301,3 +301,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,vercel,yarn,git,python
 node_modules
+staticfiles
